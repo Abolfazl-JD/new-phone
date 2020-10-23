@@ -1,0 +1,74 @@
+#body {
+    background-color: #f7f7f7;
+}
+
+#search {
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+    height: 33px;
+}
+
+.phones {
+    text-align: left;
+    width: 50%;
+    margin: 0 auto;
+    background-color: #f8f8f8;
+}
+
+.informations {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding-left: 18px;
+}
+
+.people {
+    font-size: 17px;
+    margin-top: 11px;
+}
+
+.numbers {
+    color: #797979;
+    margin-top: -14px;
+    font-size: 11px;
+}
+
+.keyboard {
+    position: fixed;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    bottom: 0;
+    background-color: #fff;
+
+    box-sizing: border-box;
+    border: 1px solid black;
+
+    width: 800px;
+    max-width: 100%;
+
+    /* make keyboard center */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.child {
+    display: inline-block;
+    width: 33.33%;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.child:hover {
+    background-color: #f2f2f2;
+}
+
+.num {
+    font-size: 38px;
+    cursor: pointer;
+}
+
+span {
+    font-size: 13px;
+    color: #797979;
+    cursor: pointer;
+}
