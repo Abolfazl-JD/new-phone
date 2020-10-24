@@ -87,15 +87,17 @@ input.onkeydown = function() {
     if (key == 8) {
 
         for (let i = 0; i < result.length; i++) {
-            const element = result[i];
-            let clearing_word = element.matched.slice(element.matched.length - 1, element.matched.length)
-            element.matched = element.matched.slice(0, element.matched.length - 1)
-            element.name = clearing_word.concat(element.name)
-            if (element.matched === '') {
-                result = result.filter(e => e !== element)
-            }
-            if (element.matched.length === 1) {
+            if (input.value.length !== 2 && input.value.length !== 1) {
+                let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
+                result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
+                result[i].name = clearing_word.concat(result[i].name)
+
+            } else if (input.value.length === 2) {
                 result = first_matched_indexes
+                first_matched_indexes = []
+                console.log(result)
+            } else if (input.value.length === 1) {
+                result = []
                 console.log(result)
             }
         }
