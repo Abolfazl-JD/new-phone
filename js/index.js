@@ -59,6 +59,7 @@ function searchContacts() {
                     result.push(new_element)
                     first_matched_indexes.push(new_element)
                     ContactList(result)
+                    console.log(first_matched_indexes)
                 }
             }
         }
@@ -93,7 +94,8 @@ input.onkeydown = function() {
             if (element.matched === '') {
                 result = result.filter(e => e !== element)
             }
-            if (input.value.length === 2) {
+            if (element.matched.length === 1) {
+                result = first_matched_indexes
                 console.log(result)
             }
         }
