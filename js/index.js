@@ -51,6 +51,7 @@ function searchContacts() {
             const element = allUsers[i];
             for (const chars of characterToSearch[word]) {
                 if (element.name.toLowerCase().indexOf(chars) === 0 && result.indexOf(element) === -1) {
+                    first_matched_indexes = []
                     let selected_index = element.name.toLowerCase().indexOf(chars)
                     let new_element = []
                     new_element.name = element.name.slice(selected_index + 1).toLowerCase()
@@ -94,7 +95,6 @@ input.onkeydown = function() {
 
             } else if (input.value.length === 2) {
                 result = first_matched_indexes
-                first_matched_indexes = []
                 console.log(result)
             } else if (input.value.length === 1) {
                 result = []
