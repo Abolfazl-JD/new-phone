@@ -4,16 +4,16 @@ let input = document.getElementById('search')
 
 
 let allUsers = [
-    { name: "Reza", number: "+989381072254", matched: '', part_to_color: [0] },
-    { name: "Parsa", number: "+989101548653", matched: '', part_to_color: [0] },
-    { name: "Hassan", number: "+989125894761", matched: '', part_to_color: [0] },
-    { name: "Jafar", number: "+989012486248", matched: '', part_to_color: [0] },
-    { name: "Mammad", number: "+9890745615784", matched: '', part_to_color: [0] },
-    { name: "Sarah", number: "+989101522273", matched: '', part_to_color: [0] },
-    { name: "Emma watson", number: "+989154862124", matched: '', part_to_color: [0, 5] },
-    { name: "Jenifer lopez", number: "+98939458716", matched: '', part_to_color: [0, 8] },
-    { name: "Anjelina Jooly", number: "+989174589348", matched: '', part_to_color: [0, 9] },
-    { name: "Amber heard", number: "+989872452555", matched: '', part_to_color: [0, 6] },
+    { name: "Reza", number: "+989381072254", matched: '' },
+    { name: "Parsa", number: "+989101548653", matched: '' },
+    { name: "Hassan", number: "+989125894761", matched: '' },
+    { name: "Jafar", number: "+989012486248", matched: '' },
+    { name: "Mammad", number: "+9890745615784", matched: '' },
+    { name: "Sarah", number: "+989101522273", matched: '' },
+    { name: "Emma watson", number: "+989154862124", matched: '' },
+    { name: "Jenifer lopez", number: "+98939458716", matched: '' },
+    { name: "Anjelina Jooly", number: "+989174589348", matched: '' },
+    { name: "Amber heard", number: "+989872452555", matched: '' },
 ]
 
 const numberButtons = [
@@ -50,18 +50,15 @@ function searchContacts() {
         for (let i = 0; i < allUsers.length; i++) {
             const element = allUsers[i];
             for (const chars of characterToSearch[word]) {
-                if (element.name.toLowerCase().indexOf(chars) === element.part_to_color[0] || element.name.toLowerCase().indexOf(chars) === element.part_to_color[1]) {
-                    if (result.indexOf(element) === -1) {
-                        let selected_index = element.name.toLowerCase().indexOf(chars)
-                        let new_element = {}
-                        new_element.name = element.name.slice(selected_index + 1).toLowerCase()
-                        new_element.number = element.number
-                        new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
-                        first_matched_indexes.push({...new_element })
-                        result.push(new_element)
-                        ContactList(result)
-                    }
-
+                if (element.name.toLowerCase().indexOf(chars) === 0 && result.indexOf(element) === -1) {
+                    let selected_index = element.name.toLowerCase().indexOf(chars)
+                    let new_element = {}
+                    new_element.name = element.name.slice(selected_index + 1).toLowerCase()
+                    new_element.number = element.number
+                    new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
+                    first_matched_indexes.push({...new_element })
+                    result.push(new_element)
+                    ContactList(result)
                 }
             }
         }
@@ -104,9 +101,6 @@ input.onkeydown = function() {
     }
 };
 
-input.onfocus = function() {
-    ContactList(result)
-}
 
 // ------------------- element generators ---------------------------
 
