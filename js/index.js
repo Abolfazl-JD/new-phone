@@ -51,7 +51,6 @@ function searchContacts() {
             const element = allUsers[i];
             for (const chars of characterToSearch[word]) {
                 if (element.name.toLowerCase().indexOf(chars) === 0 && result.indexOf(element) === -1) {
-                    first_matched_indexes = []
                     let selected_index = element.name.toLowerCase().indexOf(chars)
                     let new_element = []
                     new_element.name = element.name.slice(selected_index + 1).toLowerCase()
@@ -60,7 +59,6 @@ function searchContacts() {
                     result.push(new_element)
                     first_matched_indexes.push(new_element)
                     ContactList(result)
-                    console.log(first_matched_indexes)
                 }
             }
         }
@@ -70,7 +68,6 @@ function searchContacts() {
 
             for (const chars of characterToSearch[word]) {
                 if (element.name.toLowerCase().indexOf(chars) === 0) {
-
                     let selected_index = element.name.toLowerCase().indexOf(chars)
                     element.matched += element.name.slice(0, selected_index + 1).toLowerCase()
                     element.name = element.name.slice(selected_index + 1).toLowerCase()
@@ -82,6 +79,7 @@ function searchContacts() {
         }
     }
 
+    console.log(first_matched_indexes)
 }
 input.onkeydown = function() {
     var key = event.keyCode || event.charCode;
@@ -95,10 +93,9 @@ input.onkeydown = function() {
 
             } else if (input.value.length === 2) {
                 result = first_matched_indexes
-                console.log(result)
             } else if (input.value.length === 1) {
                 result = []
-                console.log(result)
+                first_matched_indexes = []
             }
         }
     }
