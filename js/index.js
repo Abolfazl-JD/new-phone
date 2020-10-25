@@ -56,8 +56,9 @@ function searchContacts() {
                     new_element.name = element.name.slice(selected_index + 1).toLowerCase()
                     new_element.number = element.number
                     new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
+                    console.log(new_element)
+                    console.log(first_matched_indexes)
                     result.push(new_element)
-                    first_matched_indexes.push(new_element)
                     ContactList(result)
                 }
             }
@@ -68,26 +69,19 @@ function searchContacts() {
 
             for (const chars of characterToSearch[word]) {
                 if (element.name.toLowerCase().indexOf(chars) === 0) {
-                    console.log(first_matched_indexes)
                     let selected_index = element.name.toLowerCase().indexOf(chars)
-                    console.log(first_matched_indexes)
                     element.matched += element.name.slice(0, selected_index + 1).toLowerCase()
-                    console.log(first_matched_indexes)
                     element.name = element.name.slice(selected_index + 1).toLowerCase()
-                    console.log(first_matched_indexes)
                     result = result.filter(e => e === element)
-                    console.log(first_matched_indexes)
                     ContactList(result)
                 }
             }
         }
     }
-    console.log(first_matched_indexes)
 }
 input.onkeydown = function() {
     var key = event.keyCode || event.charCode;
     if (key == 8) {
-
         for (let i = 0; i < result.length; i++) {
             if (input.value.length !== 2 && input.value.length !== 1) {
                 let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
@@ -97,7 +91,6 @@ input.onkeydown = function() {
             } else if (input.value.length === 2) {
                 result = first_matched_indexes
                 ContactList(result)
-                console.log(first_matched_indexes)
             } else if (input.value.length === 1) {
                 result = []
                 first_matched_indexes = []
