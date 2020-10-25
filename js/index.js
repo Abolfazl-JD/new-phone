@@ -52,7 +52,7 @@ function searchContacts() {
             for (const chars of characterToSearch[word]) {
                 if (element.name.toLowerCase().indexOf(chars) === 0 && result.indexOf(element) === -1) {
                     let selected_index = element.name.toLowerCase().indexOf(chars)
-                    let new_element = []
+                    let new_element = {}
                     new_element.name = element.name.slice(selected_index + 1).toLowerCase()
                     new_element.number = element.number
                     new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
@@ -68,17 +68,20 @@ function searchContacts() {
 
             for (const chars of characterToSearch[word]) {
                 if (element.name.toLowerCase().indexOf(chars) === 0) {
+                    console.log(first_matched_indexes)
                     let selected_index = element.name.toLowerCase().indexOf(chars)
+                    console.log(first_matched_indexes)
                     element.matched += element.name.slice(0, selected_index + 1).toLowerCase()
+                    console.log(first_matched_indexes)
                     element.name = element.name.slice(selected_index + 1).toLowerCase()
+                    console.log(first_matched_indexes)
                     result = result.filter(e => e === element)
-
+                    console.log(first_matched_indexes)
                     ContactList(result)
                 }
             }
         }
     }
-
     console.log(first_matched_indexes)
 }
 input.onkeydown = function() {
@@ -90,12 +93,15 @@ input.onkeydown = function() {
                 let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
                 result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
                 result[i].name = clearing_word.concat(result[i].name)
-
+                ContactList(result)
             } else if (input.value.length === 2) {
                 result = first_matched_indexes
+                ContactList(result)
+                console.log(first_matched_indexes)
             } else if (input.value.length === 1) {
                 result = []
                 first_matched_indexes = []
+                ContactList(result)
             }
         }
     }
