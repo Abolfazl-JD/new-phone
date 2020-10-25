@@ -56,7 +56,7 @@ function searchContacts() {
                     new_element.name = element.name.slice(selected_index + 1).toLowerCase()
                     new_element.number = element.number
                     new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
-                    first_matched_indexes.push(new_element)
+                    first_matched_indexes.push({...new_element })
                     result.push(new_element)
                     ContactList(result)
                 }
