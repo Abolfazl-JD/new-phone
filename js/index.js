@@ -57,7 +57,7 @@ function searchContacts() {
                     new_element.number = element.number
                     new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
                     first_matched_indexes.push({...new_element })
-                    result.push(new_element)
+                    result.push({...new_element })
                     ContactList(result)
                 }
             }
@@ -81,7 +81,6 @@ function searchContacts() {
 input.onkeydown = function() {
     var key = event.keyCode || event.charCode;
     if (key == 8) {
-        console.log(first_matched_indexes)
         for (let i = 0; i < result.length; i++) {
             if (input.value.length !== 2 && input.value.length !== 1) {
                 let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
@@ -89,7 +88,8 @@ input.onkeydown = function() {
                 result[i].name = clearing_word.concat(result[i].name)
                 ContactList(result)
             } else if (input.value.length === 2) {
-                result = first_matched_indexes
+                result = [...first_matched_indexes]
+                console.log(first_matched_indexes)
                 ContactList(result)
             } else if (input.value.length === 1) {
                 result = []
