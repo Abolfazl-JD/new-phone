@@ -56,8 +56,7 @@ function searchContacts() {
                     new_element.name = element.name.slice(selected_index + 1).toLowerCase()
                     new_element.number = element.number
                     new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
-                    console.log(new_element)
-                    console.log(first_matched_indexes)
+                    first_matched_indexes.push(new_element)
                     result.push(new_element)
                     ContactList(result)
                 }
@@ -82,6 +81,7 @@ function searchContacts() {
 input.onkeydown = function() {
     var key = event.keyCode || event.charCode;
     if (key == 8) {
+        console.log(first_matched_indexes)
         for (let i = 0; i < result.length; i++) {
             if (input.value.length !== 2 && input.value.length !== 1) {
                 let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
