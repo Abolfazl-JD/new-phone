@@ -2,18 +2,23 @@
 
 let input = document.getElementById('search')
 
+// "Emma watson" => ['Emma', 'waston']
+// 'ali reza jalali' => ['ali', 'reza', 'jalali']
+
+// characterToSearch = ['abc', 'def']
+// // 
 
 let allUsers = [
-    { name: "Reza", number: "+989381072254", matched: '', word_to_select: [0, 0] },
-    { name: "Parsa", number: "+989101548653", matched: '', word_to_select: [0, 0] },
-    { name: "Hassan", number: "+989125894761", matched: '', word_to_select: [0, 0] },
-    { name: "Jafar", number: "+989012486248", matched: '', word_to_select: [0, 0] },
-    { name: "Mammad", number: "+9890745615784", matched: '', word_to_select: [0, 0] },
-    { name: "Sarah", number: "+989101522273", matched: '', word_to_select: [0, 0] },
-    { name: "Emma watson", number: "+989154862124", matched: '', word_to_select: [0, 5] },
-    { name: "Jenifer lopez", number: "+98939458716", matched: '', word_to_select: [0, 8] },
-    { name: "Anjelina Jooly", number: "+989174589348", matched: '', word_to_select: [0, 9] },
-    { name: "Amber heard", number: "+989872452555", matched: '', word_to_select: [0, 6] },
+    { name: "Reza", number: "+989381072254" },
+    { name: "Parsa", number: "+989101548653" },
+    { name: "Hassan", number: "+989125894761" },
+    { name: "Jafar", number: "+989012486248" },
+    { name: "Mammad", number: "+9890745615784" },
+    { name: "Sarah", number: "+989101522273" },
+    { name: "Emma watson", number: "+989154862124", },
+    { name: "Jenifer lopez", number: "+98939458716", },
+    { name: "Anjelina Jooly", number: "+989174589348", },
+    { name: "Amber heard", number: "+989872452555", },
 ]
 
 const numberButtons = [
@@ -43,142 +48,130 @@ function addAlphabetToSearchBar(number, alphabets) {
 }
 let result = []
 let first_matched_indexes = []
-    // خب؟
-    //یعنی چی خب بهت جاشو گفتم دگ در اصل این اون  یوزر هایی ک بار اول هم خونی داشتند رو میگیره کرسور من رو دنبال
 
-// خیل خب
-// ببین حالا باید با اسم یوزر ها بازی کنی
-// اول باید اینکارو بکنی
-
-// name: 'ali reza jalili' => ['ali', 'reza', 'jalili']
-
-//الان من اینو تو allusers ببرم؟
-// نه
-//اره درست میگی اینو یادم رفته پاک کنم
 function searchContacts() {
-    let word = characterToSearch.length - 1
+    let chars_i = characterToSearch.length - 1
+
     if (result.length === 0) {
-        for (let i = 0; i < allUsers.length; i++) {
+        for (const i in allUsers) { // [] <= {}
+            const user = allUsers[i]
 
-            const element = allUsers[i]
-            for (const chars of characterToSearch[word]) { // نه اشتباه کردم
-                if (element.name.toLowerCase().indexOf(chars) === 0 && result.indexOf(element) === -1) {
-                    let selected_index = element.name.toLowerCase().indexOf(chars)
+            // "Emma Winstom"  => ["emma", "winstom"]
+            const user_names = user.name.toLowerCase().split(' ')
+                // which words of user_name
+            let word_index = 0
+            let char_index = 0 // char index of user_name
 
-                    const new_element = {
-                            name: element.name.slice(selected_index + 1).toLowerCase(),
-                            number: element.number,
-                            matched: element.name.slice(0, selected_index + 1).toLowerCase()
-                        }
-                        //میخوای بریم با صداشو نصب کنیم؟
+            // ['abc', 'def',...]
+            // characterToSearch[chars_i] = 'abc'
+            for (const char of characterToSearch[chars_i]) {
+                // abc
+                // char: a 
+                if (char === user_names[word_index][char_index]) {
+                    // "emma" => 'e'
+                }
+            }
+            const new_element = {
+                    name: user.name.slice(char_index + 1).toLowerCase(),
+                    number: user.number,
+                    matched: user.name.slice(0, selected_index + 1).toLowerCase()
+                }
+                //میخوای بریم با صداشو نصب کنیم؟
 
-                    first_matched_indexes.push({...new_element })
-                    result.push(new_element)
-                } else if (element.name.toLowerCase().indexOf(chars) === element.word_to_select[1] && result.indexOf(element) === -1) {
-                    let selected_index = element.name.toLowerCase().indexOf(chars)
+            first_matched_indexes.push({...new_element })
+            result.push(new_element)
+            ContactList(result)
 
-                    const new_element = {
-                            name: element.name.slice(selected_index + 1).toLowerCase(),
-                            number: element.number,
-                            matched: element.name.slice(0, selected_index + 1).toLowerCase(),
-                        }
-                        //کرسر منو دنبال کن
-                        // واسه متغیر هات اسم درست و حسابی انتخاب کن این چیه؟
-                    first_matched_indexes.push({...new_element })
-                    result.push(new_element)
+        } else if (result.length !== 0) {
+            for (let i = 0; i < result.length; i++) {
+                const user = result[i];
+
+                for (const char of characterToSearch[chars_i]) {
+                    if (user.name.toLowerCase().indexOf(char) === 0) {
+                        let selected_index = user.name.toLowerCase().indexOf(char)
+                        user.matched += user.name.slice(0, selected_index + 1).toLowerCase()
+                        user.name = user.name.slice(selected_index + 1).toLowerCase()
+                        result = result.filter(e => e === user)
+                    }
                 }
             }
             ContactList(result)
         }
-    } else if (result.length !== 0) {
-        for (let i = 0; i < result.length; i++) {
-            const element = result[i];
+    }
 
-            for (const chars of characterToSearch[word]) {
-                if (element.name.toLowerCase().indexOf(chars) === 0) {
-                    let selected_index = element.name.toLowerCase().indexOf(chars)
-                    element.matched += element.name.slice(0, selected_index + 1).toLowerCase()
-                    element.name = element.name.slice(selected_index + 1).toLowerCase()
-                    result = result.filter(e => e === element)
+
+    input.onkeydown = function() {
+        var key = event.keyCode || event.charCode;
+        if (key == 8) {
+            for (let i = 0; i < result.length; i++) {
+                if (input.value.length !== 2 && input.value.length !== 1) {
+                    // الان بیا مشکل رو حل کنیم
+                    let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
+                    result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
+                    result[i].name = clearing_word.concat(result[i].name)
+
+                } else if (input.value.length === 2) {
+                    result = JSON.parse(JSON.stringify(first_matched_indexes))
+                } else if (input.value.length === 1) {
+                    result = []
+                    first_matched_indexes = []
                 }
             }
+            ContactList(result)
         }
-        ContactList(result)
     }
-}
 
 
-input.onkeydown = function() {
-    var key = event.keyCode || event.charCode;
-    if (key == 8) {
-        for (let i = 0; i < result.length; i++) {
-            if (input.value.length !== 2 && input.value.length !== 1) {
-                // الان بیا مشکل رو حل کنیم
-                let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
-                result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
-                result[i].name = clearing_word.concat(result[i].name)
-            } else if (input.value.length === 2) {
-                result = JSON.parse(JSON.stringify(first_matched_indexes));
-            } else if (input.value.length === 1) {
-                result = []
-                first_matched_indexes = []
-            }
-        }
-        ContactList(result)
+
+
+    // ------------------- element generators ---------------------------
+
+    // users argument is a allUsers of user object
+    function ContactList(users) {
+        const usersItems = users.map(u => ContactItem(u))
+        $('.phones').html(usersItems.join(''))
     }
-}
+
+    // generates a new contact element
+    function ContactItem({ name, number, matched }) {
+        return (
+            "<div class='informations'>" +
+            `<span class='matched'>${matched}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    }
+
+    function keyboardButtonElem({ number, alphabets }) {
+        return (
+            `<div class="child" onclick="addAlphabetToSearchBar(${number},'${alphabets}')">` +
+            `  <div class="num">${number}</div>` +
+            `  <span id="s8">${alphabets}</span>` +
+            '</div>'
+        )
+    }
+
+    function keyboardGenElem() {
+        const buttons = numberButtons.map(b => keyboardButtonElem(b))
+        $('.keyboard').html(buttons.join(''))
+    }
+
+    // -------------------- initialize event listeners ---------------------
+
+    $(document).ready(() => {
+            $('#search').focus(() => {
+                $('.keyboard').slideDown(500)
+
+                $('.informations').css('display', 'none')
+                $('.phones').css('height', '230px')
+                $('.phones').css('overflow', 'scroll')
 
 
+                keyboardGenElem()
+            })
 
-
-// ------------------- element generators ---------------------------
-
-// users argument is a allUsers of user object
-function ContactList(users) {
-    const usersItems = users.map(u => ContactItem(u))
-    $('.phones').html(usersItems.join(''))
-}
-
-// generates a new contact element
-function ContactItem({ name, number, matched }) {
-    return (
-        "<div class='informations'>" +
-        `<span style = "background-color:aqua;display:inline-block;font-size:17px;color:#000;margin-right:-4px;margin-top:11px;">${matched}</span>` +
-        `  <span style = "display : inline-block;color:black;" class='people'>${name}</span >` +
-        `  <p class='numbers'>${number}</p>` +
-        "</div >"
-    )
-}
-
-function keyboardButtonElem({ number, alphabets }) {
-    return (
-        `<div class="child" onclick="addAlphabetToSearchBar(${number},'${alphabets}')">` +
-        `  <div class="num">${number}</div>` +
-        `  <span id="s8">${alphabets}</span>` +
-        '</div>'
-    )
-}
-
-function keyboardGenElem() {
-    const buttons = numberButtons.map(b => keyboardButtonElem(b))
-    $('.keyboard').html(buttons.join(''))
-}
-
-// -------------------- initialize event listeners ---------------------
-
-$(document).ready(() => {
-        $('#search').focus(() => {
-            $('.keyboard').slideDown(500)
-
-            $('.informations').css('display', 'none')
-            $('.phones').css('height', '230px')
-            $('.phones').css('overflow', 'scroll')
-
-
-            keyboardGenElem()
+            ContactList(allUsers)
         })
-
-        ContactList(allUsers)
-    })
-    //هر کاری میکنی توضیح بده صفحه من نمیدونم چرا انقدر کوچیکه
+        //هر کاری میکنی توضیح بده صفحه من نمیدونم چرا انقدر کوچیکه
 }
