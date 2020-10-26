@@ -57,65 +57,56 @@ function is_char_matched_with(char, chars2match) {
 }
 
 function searchContacts() {
-    let chars_i = characterToSearch.length - 1
+    // 1: abc, 6: lmn
+    let chars_i = characterToSearch.length - 1 // 1
 
     if (result.length === 0) {
-        for (const i in allUsers) { // [] <= {}
-            const user = allUsers[i]
+        result = JSON.parse(JSON.stringify(allUsers))
+    }
 
-            // "Emma Winstom"  => ["emma", "wastom"]
-            const user_names = user.name.toLowerCase().split(' ')
+    for (const i in result) { // [] <= {}
+        const user = result[i]
 
-            // which words of user_name
-            let word_index = 0
-            let char_index = 0 // char index of user_name
+        // "Emma Winstom"  => ["emma", "wastom"]
+        const user_names = user.name.toLowerCase().split(' ')
 
-            user.matched_indexes = Array(user_names.length).fill(0) // [1,0]
+        // which words of user_name
+        let word_index = 0
+        let char_index = 0 // char index of user_name
 
-            while (true) { //e
-                const is_matched = is_char_matched_with(
-                    user_names[word_index][char_index], characterToSearch[chars_i]
-                )
+        user.matched_indexes = Array(user_names.length).fill(0) // [0,0]
 
-                //['ali', 'reza'],  1:'abc', 6: 'lmn'
-                if (is_matched) {
-                    user.matched_indexes[word_index] = char_index + 1
-                    char_index += 1
-                } else {
-                    if (word_index === user_names.length - 1) break
-                    else {
-                        word_index += 1
-                        char_index = 0
-                    }
-                }
-            }
+        while (true) {
+            const is_matched = is_char_matched_with(
+                user_names[word_index][char_index], characterToSearch[chars_i]
+            )
 
-            const new_element = {
-                    name: user.name.slice(char_index + 1).toLowerCase(),
-                    number: user.number,
-                    matched: user.name.slice(0, selected_index + 1).toLowerCase()
-                }
-                //میخوای بریم با صداشو نصب کنیم؟
-
-            first_matched_indexes.push({...new_element })
-            result.push(new_element)
-            ContactList(result)
-        }
-    } else if (result.length !== 0) {
-        for (let i = 0; i < result.length; i++) {
-            const user = result[i];
-
-            for (const char of characterToSearch[chars_i]) {
-                if (user.name.toLowerCase().indexOf(char) === 0) {
-                    let selected_index = user.name.toLowerCase().indexOf(char)
-                    user.matched += user.name.slice(0, selected_index + 1).toLowerCase()
-                    user.name = user.name.slice(selected_index + 1).toLowerCase()
-                    result = result.filter(e => e === user)
+            //['ali', 'reza'],  1:'abc'
+            if (is_matched) {
+                user.matched_indexes[word_index] = char_index + 1
+                char_index += 1
+                break
+            } else {
+                if (word_index === user_names.length - 1) break
+                else {
+                    word_index += 1
+                    char_index = 0
                 }
             }
         }
+
+
+        const new_element = {
+            name: user.name.slice(char_index + 1).toLowerCase(),
+            number: user.number,
+            matched: user.name.slice(0, selected_index + 1).toLowerCase()
+        }
+
+        first_matched_indexes.push({...new_element })
+        result.push(new_element)
         ContactList(result)
     }
+
 }
 
 
@@ -152,14 +143,19 @@ function ContactList(users) {
 }
 
 // generates a new contact element
-function ContactItem({ name, number, matched }) {
-    return (
-        "<div class='informations'>" +
-        `<span class='matched'>${matched}</span>` +
-        `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
-        `  <p class='numbers'>${number}</p>` +
-        "</div >"
-    )
+function ContactItem({ name, number, matched_indexes = [0, 0, 0, 2] }) {
+    if (matched_indexes.every(m => m === 0)) return ''
+
+    else {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    }
+
 }
 
 function keyboardButtonElem({ number, alphabets }) {
