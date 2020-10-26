@@ -56,19 +56,35 @@ function searchContacts() {
         for (const i in allUsers) { // [] <= {}
             const user = allUsers[i]
 
-            // "Emma Winstom"  => ["emma", "winstom"]
+            // "Emma Winstom"  => ["emma", "wastom"]
             const user_names = user.name.toLowerCase().split(' ')
-                // which words of user_name
+
+            // which words of user_name
             let word_index = 0
             let char_index = 0 // char index of user_name
 
+            user.matched_indexes = Array(user_names.length).fill(0) // [1,0,]
+
             // ['abc', 'def',...]
             // characterToSearch[chars_i] = 'abc'
+            /*
+
+
+
+            */
             for (const char of characterToSearch[chars_i]) {
                 // abc
                 // char: a 
+                // emma => e
+                // emma watson 9 => wxyz
                 if (char === user_names[word_index][char_index]) {
-                    // "emma" => 'e'
+                    user.matched_indexes[word_index] = char_index + 1
+                } else {
+                    if (word_index === user_names.length - 1) break
+                    else {
+                        word_index += 1
+                        char_index = 0
+                    }
                 }
             }
             const new_element = {
@@ -81,97 +97,97 @@ function searchContacts() {
             first_matched_indexes.push({...new_element })
             result.push(new_element)
             ContactList(result)
+        }
+    } else if (result.length !== 0) {
+        for (let i = 0; i < result.length; i++) {
+            const user = result[i];
 
-        } else if (result.length !== 0) {
-            for (let i = 0; i < result.length; i++) {
-                const user = result[i];
-
-                for (const char of characterToSearch[chars_i]) {
-                    if (user.name.toLowerCase().indexOf(char) === 0) {
-                        let selected_index = user.name.toLowerCase().indexOf(char)
-                        user.matched += user.name.slice(0, selected_index + 1).toLowerCase()
-                        user.name = user.name.slice(selected_index + 1).toLowerCase()
-                        result = result.filter(e => e === user)
-                    }
+            for (const char of characterToSearch[chars_i]) {
+                if (user.name.toLowerCase().indexOf(char) === 0) {
+                    let selected_index = user.name.toLowerCase().indexOf(char)
+                    user.matched += user.name.slice(0, selected_index + 1).toLowerCase()
+                    user.name = user.name.slice(selected_index + 1).toLowerCase()
+                    result = result.filter(e => e === user)
                 }
             }
-            ContactList(result)
         }
+        ContactList(result)
     }
+}
 
 
-    input.onkeydown = function() {
-        var key = event.keyCode || event.charCode;
-        if (key == 8) {
-            for (let i = 0; i < result.length; i++) {
-                if (input.value.length !== 2 && input.value.length !== 1) {
-                    // الان بیا مشکل رو حل کنیم
-                    let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
-                    result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
-                    result[i].name = clearing_word.concat(result[i].name)
+input.onkeydown = function() {
+    var key = event.keyCode || event.charCode;
+    if (key == 8) {
+        for (let i = 0; i < result.length; i++) {
+            if (input.value.length !== 2 && input.value.length !== 1) {
+                // الان بیا مشکل رو حل کنیم
+                let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
+                result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
+                result[i].name = clearing_word.concat(result[i].name)
 
-                } else if (input.value.length === 2) {
-                    result = JSON.parse(JSON.stringify(first_matched_indexes))
-                } else if (input.value.length === 1) {
-                    result = []
-                    first_matched_indexes = []
-                }
+            } else if (input.value.length === 2) {
+                result = JSON.parse(JSON.stringify(first_matched_indexes))
+            } else if (input.value.length === 1) {
+                result = []
+                first_matched_indexes = []
             }
-            ContactList(result)
         }
+        ContactList(result)
     }
+}
 
 
 
 
-    // ------------------- element generators ---------------------------
+// ------------------- element generators ---------------------------
 
-    // users argument is a allUsers of user object
-    function ContactList(users) {
-        const usersItems = users.map(u => ContactItem(u))
-        $('.phones').html(usersItems.join(''))
-    }
+// users argument is a allUsers of user object
+function ContactList(users) {
+    const usersItems = users.map(u => ContactItem(u))
+    $('.phones').html(usersItems.join(''))
+}
 
-    // generates a new contact element
-    function ContactItem({ name, number, matched }) {
-        return (
-            "<div class='informations'>" +
-            `<span class='matched'>${matched}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    }
+// generates a new contact element
+function ContactItem({ name, number, matched }) {
+    return (
+        "<div class='informations'>" +
+        `<span class='matched'>${matched}</span>` +
+        `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
+        `  <p class='numbers'>${number}</p>` +
+        "</div >"
+    )
+}
 
-    function keyboardButtonElem({ number, alphabets }) {
-        return (
-            `<div class="child" onclick="addAlphabetToSearchBar(${number},'${alphabets}')">` +
-            `  <div class="num">${number}</div>` +
-            `  <span id="s8">${alphabets}</span>` +
-            '</div>'
-        )
-    }
+function keyboardButtonElem({ number, alphabets }) {
+    return (
+        `<div class="child" onclick="addAlphabetToSearchBar(${number},'${alphabets}')">` +
+        `  <div class="num">${number}</div>` +
+        `  <span id="s8">${alphabets}</span>` +
+        '</div>'
+    )
+}
 
-    function keyboardGenElem() {
-        const buttons = numberButtons.map(b => keyboardButtonElem(b))
-        $('.keyboard').html(buttons.join(''))
-    }
+function keyboardGenElem() {
+    const buttons = numberButtons.map(b => keyboardButtonElem(b))
+    $('.keyboard').html(buttons.join(''))
+}
 
-    // -------------------- initialize event listeners ---------------------
+// -------------------- initialize event listeners ---------------------
 
-    $(document).ready(() => {
-            $('#search').focus(() => {
-                $('.keyboard').slideDown(500)
+$(document).ready(() => {
+        $('#search').focus(() => {
+            $('.keyboard').slideDown(500)
 
-                $('.informations').css('display', 'none')
-                $('.phones').css('height', '230px')
-                $('.phones').css('overflow', 'scroll')
+            $('.informations').css('display', 'none')
+            $('.phones').css('height', '230px')
+            $('.phones').css('overflow', 'scroll')
 
 
-                keyboardGenElem()
-            })
-
-            ContactList(allUsers)
+            keyboardGenElem()
         })
-        //هر کاری میکنی توضیح بده صفحه من نمیدونم چرا انقدر کوچیکه
+
+        ContactList(allUsers)
+    })
+    //هر کاری میکنی توضیح بده صفحه من نمیدونم چرا انقدر کوچیکه
 }
