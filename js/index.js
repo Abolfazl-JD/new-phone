@@ -1,13 +1,7 @@
 // ---------------------- data -------------------------------
-
 let input = document.getElementById('search')
-
-// "Emma watson" => ['Emma', 'waston']
-// 'ali reza jalali' => ['ali', 'reza', 'jalali']
-
-// characterToSearch = ['abc', 'def']
-// // 
-
+let char_index = 0
+    //7 rpsh
 let allUsers = [
     { name: "Reza", number: "+989381072254" },
     { name: "Parsa", number: "+989101548653" },
@@ -46,23 +40,23 @@ function addAlphabetToSearchBar(number, alphabets) {
 
     searchContacts()
 }
-let result = []
-let first_matched_indexes = []
 
+let result = []
 
 function is_char_matched_with(char, chars2match) {
-    // 'a', 'abc' => 0
-    // 'e' 'abc' => 'abc'.indexOf('e') => -1
     return chars2match.indexOf(char) !== -1
 }
 
 function searchContacts() {
-    // 1: abc, 6: lmn
+    // 1: abc, 6: rsq
+    // characterToSearch.length = 2
     let chars_i = characterToSearch.length - 1 // 1
 
     if (result.length === 0) {
         result = JSON.parse(JSON.stringify(allUsers))
     }
+
+    const new_result = []
 
     for (const i in result) { // [] <= {}
         const user = result[i]
@@ -70,18 +64,26 @@ function searchContacts() {
         // "Emma Winstom"  => ["emma", "wastom"]
         const user_names = user.name.toLowerCase().split(' ')
 
-        // which words of user_name
-        let word_index = 0
-        let char_index = 0 // char index of user_name
+
+        user.word_index // which words of user_name
+        user.char_index // char index of user_name
 
         user.matched_indexes = Array(user_names.length).fill(0) // [0,0]
 
+        //['ali', 'reza'],  1:'abc' 6: 'rsq'
         while (true) {
             const is_matched = is_char_matched_with(
-                user_names[word_index][char_index], characterToSearch[chars_i]
-            )
+                    user_names[word_index][char_index], characterToSearch[chars_i]
+                )
+                // *(a)*(l)(i)[r]eza 
+                // (e)(m)ma (w)[a]tson 1 6 6 
 
-            //['ali', 'reza'],  1:'abc'
+            // [H]uawei [h]ealth [c]are
+
+            // while for [] =< {} array.fill ,...
+
+            char_index = 0
+
             if (is_matched) {
                 user.matched_indexes[word_index] = char_index + 1
                 char_index += 1
@@ -95,18 +97,15 @@ function searchContacts() {
             }
         }
 
+        // 
+        // user.matched_indexes = [1,0]
+        if (user.matched_indexes[word_index] !== 0)
+            new_result.push(user)
 
-        const new_element = {
-            name: user.name.slice(char_index + 1).toLowerCase(),
-            number: user.number,
-            matched: user.name.slice(0, selected_index + 1).toLowerCase()
-        }
-
-        first_matched_indexes.push({...new_element })
-        result.push(new_element)
-        ContactList(result)
     }
 
+    result = new_result
+    ContactList(result)
 }
 
 
@@ -143,8 +142,8 @@ function ContactList(users) {
 }
 
 // generates a new contact element
-function ContactItem({ name, number, matched_indexes = [0, 0, 0, 2] }) {
-    if (matched_indexes.every(m => m === 0)) return ''
+function ContactItem({ name, number, matched_indexes = [] }) {
+    if (matched_indexes.length !== 0) return ''
 
     else {
         return (
@@ -175,18 +174,16 @@ function keyboardGenElem() {
 // -------------------- initialize event listeners ---------------------
 
 $(document).ready(() => {
-        $('#search').focus(() => {
-            $('.keyboard').slideDown(500)
+    $('#search').focus(() => {
+        $('.keyboard').slideDown(500)
 
-            $('.informations').css('display', 'none')
-            $('.phones').css('height', '230px')
-            $('.phones').css('overflow', 'scroll')
+        $('.informations').css('display', 'none')
+        $('.phones').css('height', '230px')
+        $('.phones').css('overflow', 'scroll')
 
 
-            keyboardGenElem()
-        })
-
-        ContactList(allUsers)
+        keyboardGenElem()
     })
-    //هر کاری میکنی توضیح بده صفحه من نمیدونم چرا انقدر کوچیکه
-}
+
+    ContactList(allUsers)
+})
