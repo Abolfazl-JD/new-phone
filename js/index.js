@@ -49,6 +49,13 @@ function addAlphabetToSearchBar(number, alphabets) {
 let result = []
 let first_matched_indexes = []
 
+
+function is_char_matched_with(char, chars2match) {
+    // 'a', 'abc' => 0
+    // 'e' 'abc' => 'abc'.indexOf('e') => -1
+    return chars2match.indexOf(char) !== -1
+}
+
 function searchContacts() {
     let chars_i = characterToSearch.length - 1
 
@@ -63,22 +70,17 @@ function searchContacts() {
             let word_index = 0
             let char_index = 0 // char index of user_name
 
-            user.matched_indexes = Array(user_names.length).fill(0) // [1,0,]
+            user.matched_indexes = Array(user_names.length).fill(0) // [1,0]
 
-            // ['abc', 'def',...]
-            // characterToSearch[chars_i] = 'abc'
-            /*
+            while (true) { //e
+                const is_matched = is_char_matched_with(
+                    user_names[word_index][char_index], characterToSearch[chars_i]
+                )
 
-
-
-            */
-            for (const char of characterToSearch[chars_i]) {
-                // abc
-                // char: a 
-                // emma => e
-                // emma watson 9 => wxyz
-                if (char === user_names[word_index][char_index]) {
+                //['ali', 'reza'],  1:'abc', 6: 'lmn'
+                if (is_matched) {
                     user.matched_indexes[word_index] = char_index + 1
+                    char_index += 1
                 } else {
                     if (word_index === user_names.length - 1) break
                     else {
@@ -87,6 +89,7 @@ function searchContacts() {
                     }
                 }
             }
+
             const new_element = {
                     name: user.name.slice(char_index + 1).toLowerCase(),
                     number: user.number,
