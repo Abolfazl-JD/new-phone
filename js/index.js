@@ -43,33 +43,52 @@ function addAlphabetToSearchBar(number, alphabets) {
 }
 let result = []
 let first_matched_indexes = []
+    // خب؟
+    //یعنی چی خب بهت جاشو گفتم دگ در اصل این اون  یوزر هایی ک بار اول هم خونی داشتند رو میگیره کرسور من رو دنبال
 
+// خیل خب
+// ببین حالا باید با اسم یوزر ها بازی کنی
+// اول باید اینکارو بکنی
+
+// name: 'ali reza jalili' => ['ali', 'reza', 'jalili']
+
+//الان من اینو تو allusers ببرم؟
+// نه
+//اره درست میگی اینو یادم رفته پاک کنم
 function searchContacts() {
     let word = characterToSearch.length - 1
     if (result.length === 0) {
         for (let i = 0; i < allUsers.length; i++) {
-            const element = allUsers[i];
-            for (const chars of characterToSearch[word]) {
+
+            const element = allUsers[i]
+            for (const chars of characterToSearch[word]) { // نه اشتباه کردم
                 if (element.name.toLowerCase().indexOf(chars) === 0 && result.indexOf(element) === -1) {
                     let selected_index = element.name.toLowerCase().indexOf(chars)
-                    let new_element = {}
-                    new_element.name = element.name.slice(selected_index + 1).toLowerCase()
-                    new_element.number = element.number
-                    new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
+
+                    const new_element = {
+                            name: element.name.slice(selected_index + 1).toLowerCase(),
+                            number: element.number,
+                            matched: element.name.slice(0, selected_index + 1).toLowerCase()
+                        }
+                        //میخوای بریم با صداشو نصب کنیم؟
+
                     first_matched_indexes.push({...new_element })
                     result.push(new_element)
-                    ContactList(result)
                 } else if (element.name.toLowerCase().indexOf(chars) === element.word_to_select[1] && result.indexOf(element) === -1) {
                     let selected_index = element.name.toLowerCase().indexOf(chars)
-                    let new_element = {}
-                    new_element.name = element.name.slice(selected_index + 1).toLowerCase()
-                    new_element.number = element.number
-                    new_element.matched = element.name.slice(0, selected_index + 1).toLowerCase()
+
+                    const new_element = {
+                            name: element.name.slice(selected_index + 1).toLowerCase(),
+                            number: element.number,
+                            matched: element.name.slice(0, selected_index + 1).toLowerCase(),
+                        }
+                        //کرسر منو دنبال کن
+                        // واسه متغیر هات اسم درست و حسابی انتخاب کن این چیه؟
                     first_matched_indexes.push({...new_element })
                     result.push(new_element)
-                    ContactList(result)
                 }
             }
+            ContactList(result)
         }
     } else if (result.length !== 0) {
         for (let i = 0; i < result.length; i++) {
@@ -81,34 +100,35 @@ function searchContacts() {
                     element.matched += element.name.slice(0, selected_index + 1).toLowerCase()
                     element.name = element.name.slice(selected_index + 1).toLowerCase()
                     result = result.filter(e => e === element)
-                    ContactList(result)
                 }
             }
         }
+        ContactList(result)
     }
 }
+
+
 input.onkeydown = function() {
     var key = event.keyCode || event.charCode;
     if (key == 8) {
         for (let i = 0; i < result.length; i++) {
             if (input.value.length !== 2 && input.value.length !== 1) {
+                // الان بیا مشکل رو حل کنیم
                 let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
                 result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
                 result[i].name = clearing_word.concat(result[i].name)
-                ContactList(result)
-                console.log(first_matched_indexes)
             } else if (input.value.length === 2) {
                 result = JSON.parse(JSON.stringify(first_matched_indexes));
-                console.log(first_matched_indexes)
-                ContactList(result)
             } else if (input.value.length === 1) {
                 result = []
                 first_matched_indexes = []
-                ContactList(result)
             }
         }
+        ContactList(result)
     }
-};
+}
+
+
 
 
 // ------------------- element generators ---------------------------
@@ -147,16 +167,18 @@ function keyboardGenElem() {
 // -------------------- initialize event listeners ---------------------
 
 $(document).ready(() => {
-    $('#search').focus(() => {
-        $('.keyboard').slideDown(500)
+        $('#search').focus(() => {
+            $('.keyboard').slideDown(500)
 
-        $('.informations').css('display', 'none')
-        $('.phones').css('height', '230px')
-        $('.phones').css('overflow', 'scroll')
+            $('.informations').css('display', 'none')
+            $('.phones').css('height', '230px')
+            $('.phones').css('overflow', 'scroll')
 
 
-        keyboardGenElem()
+            keyboardGenElem()
+        })
+
+        ContactList(allUsers)
     })
-
-    ContactList(allUsers)
-})
+    //هر کاری میکنی توضیح بده صفحه من نمیدونم چرا انقدر کوچیکه
+}
