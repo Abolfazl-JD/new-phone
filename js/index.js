@@ -57,12 +57,12 @@ function searchContacts() {
     }
 
     const new_result = []
-
+        //1:abc
     for (const i in result) { // [] <= {}
         const user = result[i]
 
         // "Emma Winstom"  => ["emma", "wastom"]
-        const user_names = user.name.toLowerCase().split(' ')
+        const user_names = user.name.toLowerCase().split(' ') //['ali','reza']
 
 
         user.word_index // which words of user_name
