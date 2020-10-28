@@ -9,7 +9,7 @@ let allUsers = [
     { name: "Emma watson", number: "+989154862124", matched: '' },
     { name: "Jenifer lopez", number: "+98939458716", matched: '' },
     { name: "Anjelina Jooly", number: "+989174589348", matched: '' },
-    { name: " Amber heard", number: "+989872452555", matched: '' },
+    { name: "Amber heard", number: "+989872452555", matched: '' },
 ]
 
 const numberButtons = [
@@ -27,7 +27,6 @@ const numberButtons = [
 
 // --------------------------- action functions --------------------------
 const searchBarElem = document.getElementById('search')
-
 let characterToSearch = [] //['abc']
 
 
@@ -60,6 +59,42 @@ function searchContacts() {
                     ContactList(result)
                 }
             }
+        }
+    } else if (result.length !== 0) {
+        for (let i = 0; i < result.length; i++) {
+            const user = result[i]
+            for (const char of characterToSearch[lastIndex]) {
+                if (user.name.toLowerCase().indexOf(char) === 0) {
+                    let selectedIndex = user.name.toLowerCase().indexOf(char)
+                    user.matched += user.name.slice(0, selectedIndex + 1).toLowerCase()
+                    user.name = user.name.slice(selectedIndex + 1).toLowerCase()
+                    result = result.filter(e => e === user)
+                    ContactList(result)
+                }
+            }
+        }
+    }
+}
+
+searchBarElem.onkeydown = function() {
+    var key = event.keyCode || event.charCode
+    if (key === 8) {
+        for (let i = 0; i < result.length; i++) {
+            const user = result[i];
+            if (searchBarElem.value.length !== 2 && searchBarElem.value.length !== 1) {
+                let clearingWord = user.matched.slice(user.matched.length - 1, user.matched.length)
+                user.matched = user.matched.slice(0, user.matched.length - 1)
+                user.name = clearingWord.concat(user.name)
+                ContactList(result)
+            } else if (searchBarElem.value.length === 2) {
+                result = JSON.parse(JSON.stringify(firstSelectedIndexes))
+                ContactList(result)
+            } else if (searchBarElem.value.length === 1) {
+                result = []
+                firstSelectedIndexes = []
+                ContactList(result)
+            }
+
         }
     }
 }
