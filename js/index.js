@@ -76,9 +76,10 @@ function ContactList(users) {
 function ContactItem({ name, number, matched }) {
     return (
         "<div class='informations'>" +
-        `  <p class='people'>${name}</p >` +
+        `  <span class='matched'>${matched}</span>` +
+        `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
         `  <p class='numbers'>${number}</p>` +
-        "</div>"
+        "</div >"
     )
 }
 
