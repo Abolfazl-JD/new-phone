@@ -1,18 +1,15 @@
 // ---------------------- data -------------------------------
-let input = document.getElementById('search')
-let char_index = 0
-    //7 rpsh
 let allUsers = [
-    { name: "Reza", number: "+989381072254" },
-    { name: "Parsa", number: "+989101548653" },
-    { name: "Hassan", number: "+989125894761" },
-    { name: "Jafar", number: "+989012486248" },
-    { name: "Mammad", number: "+9890745615784" },
-    { name: "Sarah", number: "+989101522273" },
-    { name: "Emma watson", number: "+989154862124", },
-    { name: "Jenifer lopez", number: "+98939458716", },
-    { name: "Anjelina Jooly", number: "+989174589348", },
-    { name: "Amber heard", number: "+989872452555", },
+    { name: "Reza", number: "+989381072254", matched: '' },
+    { name: "Parsa", number: "+989101548653", matched: '' },
+    { name: "Hassan", number: "+989125894761", matched: '' },
+    { name: "Jafar", number: "+989012486248", matched: '' },
+    { name: "Mammad", number: "+9890745615784", matched: '' },
+    { name: "Sarah", number: "+989101522273", matched: '' },
+    { name: "Emma watson", number: "+989154862124", matched: '' },
+    { name: "Jenifer lopez", number: "+98939458716", matched: '' },
+    { name: "Anjelina Jooly", number: "+989174589348", matched: '' },
+    { name: " Amber heard", number: "+989872452555", matched: '' },
 ]
 
 const numberButtons = [
@@ -42,96 +39,30 @@ function addAlphabetToSearchBar(number, alphabets) {
 }
 
 let result = []
-
-function is_char_matched_with(char, chars2match) {
-    return chars2match.indexOf(char) !== -1
-}
+let firstSelectedIndexes = []
 
 function searchContacts() {
-    // 1: abc, 6: rsq
-    // characterToSearch.length = 2
-    let chars_i = characterToSearch.length - 1 // 1
+
+    let lastIndex = characterToSearch.length - 1
 
     if (result.length === 0) {
-        result = JSON.parse(JSON.stringify(allUsers))
-    }
-
-    const new_result = []
-        //1:abc
-    for (const i in result) { // [] <= {}
-        const user = result[i]
-
-        // "Emma Winstom"  => ["emma", "wastom"]
-        const user_names = user.name.toLowerCase().split(' ') //['ali','reza']
-
-
-        user.word_index // which words of user_name
-        user.char_index // char index of user_name
-
-        user.matched_indexes = Array(user_names.length).fill(0) // [0,0]
-
-        //['ali', 'reza'],  1:'abc' 6: 'rsq'
-        while (true) {
-            const is_matched = is_char_matched_with(
-                    user_names[word_index][char_index], characterToSearch[chars_i]
-                )
-                // *(a)*(l)(i)[r]eza 
-                // (e)(m)ma (w)[a]tson 1 6 6 
-
-            // [H]uawei [h]ealth [c]are
-
-            // while for [] =< {} array.fill ,...
-
-            char_index = 0
-
-            if (is_matched) {
-                user.matched_indexes[word_index] = char_index + 1
-                char_index += 1
-                break
-            } else {
-                if (word_index === user_names.length - 1) break
-                else {
-                    word_index += 1
-                    char_index = 0
+        for (const user of allUsers) {
+            for (const char of characterToSearch[lastIndex]) {
+                if (user.name.toLowerCase().indexOf(char) === 0) {
+                    let selectedIndex = user.name.toLowerCase().indexOf(char)
+                    let newUser = {
+                        name: user.name.slice(selectedIndex + 1),
+                        number: user.number,
+                        matched: user.name.slice(0, selectedIndex + 1)
+                    }
+                    firstSelectedIndexes.push({...newUser })
+                    result.push(newUser)
+                    ContactList(result)
                 }
             }
         }
-
-        // 
-        // user.matched_indexes = [1,0]
-        if (user.matched_indexes[word_index] !== 0)
-            new_result.push(user)
-
-    }
-
-    result = new_result
-    ContactList(result)
-}
-
-
-input.onkeydown = function() {
-    var key = event.keyCode || event.charCode;
-    if (key == 8) {
-        for (let i = 0; i < result.length; i++) {
-            if (input.value.length !== 2 && input.value.length !== 1) {
-                // الان بیا مشکل رو حل کنیم
-                let clearing_word = result[i].matched.slice(result[i].matched.length - 1, result[i].matched.length)
-                result[i].matched = result[i].matched.slice(0, result[i].matched.length - 1)
-                result[i].name = clearing_word.concat(result[i].name)
-
-            } else if (input.value.length === 2) {
-                result = JSON.parse(JSON.stringify(first_matched_indexes))
-            } else if (input.value.length === 1) {
-                result = []
-                first_matched_indexes = []
-            }
-        }
-        ContactList(result)
     }
 }
-
-
-
 
 // ------------------- element generators ---------------------------
 
@@ -142,19 +73,13 @@ function ContactList(users) {
 }
 
 // generates a new contact element
-function ContactItem({ name, number, matched_indexes = [] }) {
-    if (matched_indexes.length !== 0) return ''
-
-    else {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    }
-
+function ContactItem({ name, number, matched }) {
+    return (
+        "<div class='informations'>" +
+        `  <p class='people'>${name}</p >` +
+        `  <p class='numbers'>${number}</p>` +
+        "</div>"
+    )
 }
 
 function keyboardButtonElem({ number, alphabets }) {
@@ -180,10 +105,8 @@ $(document).ready(() => {
         $('.informations').css('display', 'none')
         $('.phones').css('height', '230px')
         $('.phones').css('overflow', 'scroll')
-
-
-        keyboardGenElem()
     })
 
+    keyboardGenElem()
     ContactList(allUsers)
 })
