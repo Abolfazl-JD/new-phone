@@ -190,9 +190,23 @@ var indexToClear
 searchBarElem.onkeydown = function() {
     var key = event.keyCode || event.charCode
     if (key === 8) {
-        for (let i = 0; i < newUser.length; i++) {
-            const user = newUser[i];
-            if (searchBarElem.value.length !== 2 && searchBarElem.value.length !== 1) {
+        if (searchBarElem.value.length === 1) {
+            result = []
+            firstSelectedIndexes = []
+            newUser = []
+            ContactList(result)
+        } else if (searchBarElem.value.length === 2) {
+            result = JSON.parse(JSON.stringify(firstSelectedIndexes))
+
+            ContactList(result)
+        } else if (searchBarElem.value.length === 0) {
+            result = []
+            firstSelectedIndexes = []
+            newUser = []
+            ContactList(result)
+        } else if (searchBarElem.value.length !== 2 && searchBarElem.value.length !== 1) {
+            for (let i = 0; i < newUser.length; i++) {
+                const user = newUser[i];
                 let indexToClear = user.matched.indexOf('')
                 if (indexToClear === -1 || user.matched.lastIndexOf('') === 0) {
                     indexToClear = user.matched.length - 1
@@ -207,17 +221,7 @@ searchBarElem.onkeydown = function() {
                 user.name[indexToClear] = clearingWord.concat(user.name[indexToClear])
                 ContactList(newUser)
 
-            } else if (searchBarElem.value.length === 2) {
-                result = JSON.parse(JSON.stringify(firstSelectedIndexes))
-
-                ContactList(result)
-            } else if (searchBarElem.value.length === 1) {
-                result = []
-                firstSelectedIndexes = []
-                newUser = []
-                ContactList(result)
             }
-
         }
     }
 }
