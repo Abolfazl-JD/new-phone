@@ -1,18 +1,22 @@
 // ---------------------- data -------------------------------
-var word_index = 0
-var char_index = 0
+
 
 let allUsers = [
-    { name: ["Reza", ''], number: "+989381072254", matched: ['', ''] },
-    { name: ["Parsa", ''], number: "+989101548653", matched: ['', ''] },
-    { name: ["Hassan", ''], number: "+989125894761", matched: ['', ''] },
-    { name: ["Jafar", ''], number: "+989012486248", matched: ['', ''] },
-    { name: ["Mammad", ''], number: "+9890745615784", matched: ['', ''] },
-    { name: ["Sarah", ''], number: "+989101522273", matched: ['', ''] },
-    { name: ["Emma", "watson"], number: "+989154862124", matched: ['', ''] },
-    { name: ["Jenifer", "lopez"], number: "+98939458716", matched: ['', ''] },
-    { name: ["Anjelina", "Jooly"], number: "+989174589348", matched: ['', ''] },
-    { name: ["Amber", "heard"], number: "+989872452555", matched: ['', ''] },
+    { name: "Reza", number: "+989381072254" },
+    { name: "Parsa", number: "+989101548653" },
+    { name: "Hassan", number: "+989125894761" },
+    { name: "Jafar", number: "+989012486248" },
+    { name: "Mammad", number: "+9890745615784" },
+    { name: "Sarah", number: "+989101522273" },
+    { name: "Emma watson lozano", number: "+989154862124" },
+    { name: "Jenifer lopez", number: "+98939458716" },
+    { name: "Anjelina jooly lol", number: "+989174589348" },
+    { name: "Amber heard", number: "+989872445255" },
+    { name: "Leonardo dicaprio gonzales", number: "+989851249374" },
+    { name: "Hamid bloorin js mollasadra", number: "+98909410846" },
+    { name: "Agha shahrabi dinee", number: "+989897923657" },
+    { name: "Siavash qhomeishee my favorite singer", number: "+98976482315" },
+    { name: "Ebi theking of voice in the world", number: "+98929750452" },
 ]
 
 const numberButtons = [
@@ -41,36 +45,82 @@ function addAlphabetToSearchBar(number, alphabets) {
 }
 
 let result = []
+let editableAllUsers = []
 let firstSelectedIndexes = []
+let newUser = []
 
 function is_char_matched_with(char, chars2match) {
     return chars2match.indexOf(char) !== -1
 }
+var word_index = 0
+var char_index = 0
 
 function searchContacts() {
-    //2 9 : z
+
+
     let lastIndex = characterToSearch.length - 1
     let is_matched = false
-    if (result.length === 0) { //0
-        for (let i = 0; i < allUsers.length; i++) {
-            const user = allUsers[i]
-            for (const char of characterToSearch[lastIndex]) {
-                user.matched_indexes = Array(user.name.length).fill(0) //[0 , 0]
+
+    if (result.length === 0) {
+        word_index = 0
+        editableAllUsers = JSON.parse(JSON.stringify(allUsers))
+        for (let i = 0; i < editableAllUsers.length; i++) {
+            const user = editableAllUsers[i]
+            user.name = user.name.split(' ')
+            user.matched = Array(user.name.length).fill('')
+            while (true) {
+                let wordSelected = user.name[word_index][char_index].toLowerCase()
+                if (characterToSearch[lastIndex].indexOf(wordSelected) !== -1) {
+                    is_matched = true
+                }
+                if (is_matched) {
+                    let selectedIndex = user.name[word_index].indexOf(user.name[word_index][char_index])
+
+
+                    user.matched[word_index] = user.name[word_index].slice(0, selectedIndex + 1)
+                    user.name[word_index] = user.name[word_index].slice(selectedIndex + 1)
+
+
+                    let newUser2 = JSON.parse(JSON.stringify(user))
+                    firstSelectedIndexes.push({...newUser2 })
+                    result.push(user)
+                    is_matched = false
+                    ContactList(result)
+                    word_index = 0
+                    break
+                } else {
+                    if (word_index === user.name.length - 1) {
+                        word_index = 0
+                        break
+                    } else {
+                        word_index += 1
+                        char_index = 0
+                    }
+                }
+            }
+
+        }
+    } else if (result.length !== 0) {
+
+        newUser = []
+        for (let i = 0; i < result.length; i++) {
+            const user = result[i]
+            if (user.name.length < 2 && user.matched[0].length === searchBarElem.value.length - 1) {
+                word_index = 0
                 while (true) {
-                    if (user.name[word_index][char_index] === char) {
+                    let wordSelected = user.name[word_index][char_index].toLowerCase()
+                    if (characterToSearch[lastIndex].indexOf(wordSelected) !== -1) {
                         is_matched = true
                     }
-
                     if (is_matched) {
-                        let selectedIndex = user.name.toLowerCase().indexOf(char)
-                        let newUser = {
-                            name: user.name.slice(selectedIndex + 1),
-                            number: user.number,
-                            matched: user.matched.push(user.name[word_index][char_index])
-                        }
-                        firstSelectedIndexes.push({...newUser })
-                        result.push(newUser)
-                        ContactList(result)
+                        let selectedIndex = user.name[word_index].indexOf(user.name[word_index][char_index])
+
+                        user.matched[word_index] += user.name[word_index].slice(0, selectedIndex + 1)
+                        user.name[word_index] = user.name[word_index].slice(selectedIndex + 1)
+
+
+                        newUser.push(user)
+                        is_matched = false
                         break
                     } else {
                         if (word_index === user.name.length - 1) {
@@ -82,116 +132,95 @@ function searchContacts() {
                         }
                     }
                 }
-            }
-        }
-    } else if (result.length !== 0) {
-        for (let i = 0; i < result.length; i++) {
-            const user = result[i]
-            for (const char of characterToSearch[lastIndex]) {
-                if (user.name.toLowerCase().indexOf(char) === 0) {
-                    let selectedIndex = user.name.toLowerCase().indexOf(char)
-                    user.matched += user.name.slice(0, selectedIndex + 1).toLowerCase()
-                    user.name = user.name.slice(selectedIndex + 1).toLowerCase()
-                    result = result.filter(e => e === user)
-                    ContactList(result)
+
+            } else if (user.name.length > 1 && user.matched.join('') !== '' && user.matched.join('').length === searchBarElem.value.length - 1) {
+                let emptyIndex_matched = user.matched.indexOf('')
+                if (emptyIndex_matched === -1) {
+                    word_index = user.matched.length - 1
+                } else if (emptyIndex_matched === 0) {
+                    let priviousSelectedWord = user.matched.map(e => e !== "")
+                    let emptyIndex_name = user.name.lastIndexOf("")
+                    let x = priviousSelectedWord.lastIndexOf(true)
+                    x === emptyIndex_name ? word_index = x + 1 : word_index = x
+                } else {
+                    let priviousSelectedWord = user.matched.map(e => e !== "")
+                    let emptyIndex_name = user.name.lastIndexOf("")
+                    let x = priviousSelectedWord.lastIndexOf(true)
+                    x === emptyIndex_name ? word_index = x + 1 : word_index = emptyIndex_matched - 1
                 }
+                if (word_index !== -1) {
+                    while (true) {
+                        let wordSelected = user.name[word_index][char_index].toLowerCase()
+                        if (characterToSearch[lastIndex].indexOf(wordSelected) !== -1) {
+                            is_matched = true
+                        }
+                        if (is_matched) {
+                            let selectedIndex = user.name[word_index].indexOf(user.name[word_index][char_index])
+
+                            user.matched[word_index] += user.name[word_index].slice(0, selectedIndex + 1)
+                            user.name[word_index] = user.name[word_index].slice(selectedIndex + 1)
+
+
+                            newUser.push(user)
+                            is_matched = false
+                            break
+                        } else {
+                            if (emptyIndex_matched !== -1 && emptyIndex_matched !== 0 && word_index === emptyIndex_matched) {
+                                word_index = 0
+                                break
+                            } else if (word_index === user.name.length - 1) {
+                                word_index = 0
+                                break
+                            } else {
+                                word_index += 1
+                                char_index = 0
+                            }
+                        }
+                    }
+                }
+
+            }
+            if (newUser.length !== 0) {
+                ContactList(newUser)
             }
         }
     }
 }
-
+var indexToClear
 searchBarElem.onkeydown = function() {
     var key = event.keyCode || event.charCode
     if (key === 8) {
-        for (let i = 0; i < result.length; i++) {
-            const user = result[i];
+        for (let i = 0; i < newUser.length; i++) {
+            const user = newUser[i];
             if (searchBarElem.value.length !== 2 && searchBarElem.value.length !== 1) {
-                let clearingWord = user.matched.slice(user.matched.length - 1, user.matched.length)
-                user.matched = user.matched.slice(0, user.matched.length - 1)
-                user.name = clearingWord.concat(user.name)
-                ContactList(result)
+                let indexToClear = user.matched.indexOf('')
+                if (indexToClear === -1 || user.matched.lastIndexOf('') === 0) {
+                    indexToClear = user.matched.length - 1
+                } else if (indexToClear === 0 && user.matched.lastIndexOf('') !== 0) {
+                    let y = user.matched.map(e => e !== '')
+                    indexToClear = y.lastIndexOf(true)
+                } else {
+                    indexToClear -= 1
+                }
+                let clearingWord = user.matched[indexToClear].slice(user.matched[indexToClear].length - 1, user.matched[indexToClear].length)
+                user.matched[indexToClear] = user.matched[indexToClear].slice(0, user.matched[indexToClear].length - 1)
+                user.name[indexToClear] = clearingWord.concat(user.name[indexToClear])
+                ContactList(newUser)
+
             } else if (searchBarElem.value.length === 2) {
                 result = JSON.parse(JSON.stringify(firstSelectedIndexes))
+
                 ContactList(result)
             } else if (searchBarElem.value.length === 1) {
                 result = []
                 firstSelectedIndexes = []
+                newUser = []
                 ContactList(result)
             }
 
         }
     }
 }
-
-
-/*
-let result = []
-
-function is_char_matched_with(char, chars2match) {
-    return chars2match.indexOf(char) !== -1
-}
-
-function searchContacts() {
-    // 1: abc, 6: rsp
-    // characterToSearch.length = 2
-    let chars_i = characterToSearch.length - 1 // 1
-
-    if (result.length === 0) {
-        result = JSON.parse(JSON.stringify(allUsers))
-    }
-
-    const new_result = []
-        //1:abc 
-    for (const i in result) { // [] <= {}
-        const user = result[i]
-
-        // "Emma Winstom"  => ["emma", "wastom"]
-        const user.name = user.name.toLowerCase().split(' ') //['ali','reza']
-
-
-
-        user.matched_indexes = Array(user.name.length).fill(0) // [0,0]
-
-        //['ali', 'reza'],  1:'abc' 6: 'rsq'
-        while (true) {
-            const is_matched = is_char_matched_with(
-                    user.name[word_index][char_index], characterToSearch[chars_i]
-                ) //['ali' , 'reza'] 'reza' '0'                         'a,b,c'
-                // *(a)*(l)(i)[r]eza 
-                // (e)(m)ma (w)[a]tson 1 6 6 
-
-            // [H]uawei [h]ealth [c]are
-
-            // while for [] =< {} array.fill ,...
-
-
-            if (is_matched) {
-                user.matched_indexes[word_index] = char_index + 1
-                char_index += 1 //1            //0+1 [1 , 1]
-                break
-            } else {
-                if (word_index === user.name.length - 1) break
-                else {
-                    word_index += 1
-                    char_index = 0
-                }
-            }
-        }
-
-        // 
-        // user.matched_indexes = [1,0]
-        if (user.matched_indexes[word_index] !== 0)
-            new_result.push(user) //01
-
-    }
-
-    result = new_result
-    ContactList(result)
-}
-
-
-*/
-
 
 // ------------------- element generators ---------------------------
 
@@ -203,15 +232,135 @@ function ContactList(users) {
 
 // generates a new contact element
 function ContactItem({ name, number, matched }) {
-    return (
-        "<div class='informations'>" +
-        `  <span class='matched'>${matched[0]}</span>` +
-        `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-        `  <span class='matched'>${matched[1]}</span>` +
-        `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-        `  <p class='numbers'>${number}</p>` +
-        "</div >"
-    )
+    if (typeof name === "object" && name.length === 1) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 2) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 3) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <span class='matched'>${matched[2]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 4) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <span class='matched'>${matched[2]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
+            `  <span class='matched'>${matched[3]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 5) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <span class='matched'>${matched[2]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
+            `  <span class='matched'>${matched[3]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
+            `  <span class='matched'>${matched[4]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 6) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <span class='matched'>${matched[2]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
+            `  <span class='matched'>${matched[3]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
+            `  <span class='matched'>${matched[4]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
+            `  <span class='matched'>${matched[5]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[5]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 7) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <span class='matched'>${matched[2]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
+            `  <span class='matched'>${matched[3]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
+            `  <span class='matched'>${matched[4]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
+            `  <span class='matched'>${matched[5]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[5]}</span >` +
+            `  <span class='matched'>${matched[6]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[6]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else if (typeof name === "object" && name.length === 8) {
+        return (
+            "<div class='informations'>" +
+            `  <span class='matched'>${matched[0]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
+            `  <span class='matched'>${matched[1]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
+            `  <span class='matched'>${matched[2]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
+            `  <span class='matched'>${matched[3]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
+            `  <span class='matched'>${matched[4]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
+            `  <span class='matched'>${matched[5]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[5]}</span >` +
+            `  <span class='matched'>${matched[6]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[6]}</span >` +
+            `  <span class='matched'>${matched[7]}</span>` +
+            `  <span splay : inline-block;color:black;" class='people'>${name[7]}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    } else {
+        return (
+            "<div class='informations'>" +
+            `  <span splay : inline-block;color:black;" class='people'>${name}</span >` +
+            `  <p class='numbers'>${number}</p>` +
+            "</div >"
+        )
+    }
+
 }
 
 function keyboardButtonElem({ number, alphabets }) {
@@ -232,7 +381,7 @@ function keyboardGenElem() {
 
 $(document).ready(() => {
     $('#search').focus(() => {
-        $('.keyboard').slideDown(500)
+        $('.keyboard').css('display', 'flex')
 
         $('.informations').css('display', 'none')
         $('.phones').css('height', '230px')
