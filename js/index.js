@@ -236,123 +236,15 @@ function ContactList(users) {
 
 // generates a new contact element
 function ContactItem({ name, number, matched }) {
-    if (typeof name === "object" && name.length === 1) {
+    let sum = []
+    if (typeof name === "object") {
+        for (let i = 0; i < name.length; i++) {
+            const element = name[i];
+            sum.push(`  <span class='matched'>${matched[i]}</span>` + `  <span splay : inline-block;color:black;" class='people'>${name[i]}</span >`)
+        }
         return (
             "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 2) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 3) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <span class='matched'>${matched[2]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 4) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <span class='matched'>${matched[2]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
-            `  <span class='matched'>${matched[3]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 5) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <span class='matched'>${matched[2]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
-            `  <span class='matched'>${matched[3]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
-            `  <span class='matched'>${matched[4]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 6) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <span class='matched'>${matched[2]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
-            `  <span class='matched'>${matched[3]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
-            `  <span class='matched'>${matched[4]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
-            `  <span class='matched'>${matched[5]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[5]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 7) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <span class='matched'>${matched[2]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
-            `  <span class='matched'>${matched[3]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
-            `  <span class='matched'>${matched[4]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
-            `  <span class='matched'>${matched[5]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[5]}</span >` +
-            `  <span class='matched'>${matched[6]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[6]}</span >` +
-            `  <p class='numbers'>${number}</p>` +
-            "</div >"
-        )
-    } else if (typeof name === "object" && name.length === 8) {
-        return (
-            "<div class='informations'>" +
-            `  <span class='matched'>${matched[0]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[0]}</span >` +
-            `  <span class='matched'>${matched[1]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[1]}</span >` +
-            `  <span class='matched'>${matched[2]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[2]}</span >` +
-            `  <span class='matched'>${matched[3]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[3]}</span >` +
-            `  <span class='matched'>${matched[4]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[4]}</span >` +
-            `  <span class='matched'>${matched[5]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[5]}</span >` +
-            `  <span class='matched'>${matched[6]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[6]}</span >` +
-            `  <span class='matched'>${matched[7]}</span>` +
-            `  <span splay : inline-block;color:black;" class='people'>${name[7]}</span >` +
+            `${sum.join('')}` +
             `  <p class='numbers'>${number}</p>` +
             "</div >"
         )
@@ -364,6 +256,7 @@ function ContactItem({ name, number, matched }) {
             "</div >"
         )
     }
+
 
 }
 
