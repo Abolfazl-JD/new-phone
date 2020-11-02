@@ -240,7 +240,7 @@ function ContactItem({ name, number, matched }) {
     if (typeof name === "object") {
         for (let i = 0; i < name.length; i++) {
             const element = name[i];
-            sum.push(`  <span class='matched'>${matched[i]}</span>` + `  <span splay : inline-block;color:black;" class='people'>${name[i]}</span >`)
+            sum.push(`<span class='matched'>${matched[i]}</span>` + `<span class='people'>${name[i]}</span >`)
         }
         return (
             "<div class='informations'>" +
